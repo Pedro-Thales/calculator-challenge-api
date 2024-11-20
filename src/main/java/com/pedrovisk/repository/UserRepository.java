@@ -1,7 +1,13 @@
 package com.pedrovisk.repository;
 
-import com.pedrovisk.model.User;
+import com.pedrovisk.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.Optional;
+
+@Repository
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+
+    Optional<UserEntity> findByUsername(String username);
 }
