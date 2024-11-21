@@ -94,11 +94,19 @@ public class RecordService {
 
 
     @Transactional
-    public void deleteRecord(Long recordId) {
+    public void deleteRecord(Long recordId, String username) {
         log.info("Soft-Deleting record with id: {}", recordId);
+
+        UserEntity userEntity = userService.findByUsername(username);
+        log.debug("UserEntity found: {}", userEntity);
 
         RecordEntity recordEntity =
                 recordRepository.findById(recordId).orElseThrow(() -> new RecordNotFoundException("Record not found"));
+
+        if (!recordEntity.getUserEntity().equals(userEntity)) {
+            log.error("User is not authorized to delete this record");
+            throw new RecordNotFoundException("Record not found");
+        }
 
         log.debug("RecordEntity found: {}", recordEntity);
         recordEntity.setStatus(Status.INACTIVE);
@@ -107,16 +115,19 @@ public class RecordService {
         log.info("Record with id: {} soft-deleted successfully", recordId);
     }
 
-    public List<RecordEntity> getAllRecordsByUser(UserEntity user) {
-        return recordRepository.findAllByUserEntity(user);
+    public List<RecordResponse> getAllRecordsByUser(UserEntity user) {
+        log.info("Getting all active records for user with id: {}", user.getId());
+        var records =  recordRepository.findAllByUserEntityAndStatus(user, Status.ACTIVE);
+        log.debug("Found {} records for user with id: {}", records.size(), user.getId());
+        return records.stream().map(RecordResponse::new).toList();
     }
 
-    public List<RecordEntity> getAllRecordsByUserId(Long userId) {
+    public List<RecordResponse> getAllRecordsByUserId(Long userId) {
         UserEntity userEntity = userService.findById(userId);
         return getAllRecordsByUser(userEntity);
     }
 
-    public List<RecordEntity> getAllRecordsByUsername(String username) {
+    public List<RecordResponse> getAllRecordsByUsername(String username) {
         UserEntity userEntity = userService.findByUsername(username);
         return getAllRecordsByUser(userEntity);
     }

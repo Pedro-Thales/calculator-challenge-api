@@ -3,7 +3,6 @@ package com.pedrovisk.controller;
 import com.pedrovisk.exception.InsufficientBalanceException;
 import com.pedrovisk.exception.OperationNotFoundException;
 import com.pedrovisk.model.OperationEntity;
-import com.pedrovisk.model.RecordEntity;
 import com.pedrovisk.model.dto.CalculatorRequest;
 import com.pedrovisk.model.dto.RecordResponse;
 import com.pedrovisk.service.OperationService;
@@ -62,7 +61,7 @@ class CalculatorControllerTest {
         when(principal.getName()).thenReturn("validUser");
         RecordService recordService = mock(RecordService.class);
         CalculatorRequest calculatorRequest = new CalculatorRequest(1L, 2, 5.0f, 3.0f);
-        RecordResponse recordEntity = new RecordResponse(1L, 1L, 1L, 100f, "8.0", LocalDateTime.now(), "active");
+        RecordResponse recordEntity = new RecordResponse(1L, "addition", "user", 100f, "8.0", LocalDateTime.now(), "active");
         when(recordService.saveOperation("validUser", calculatorRequest)).thenReturn(recordEntity);
         CalculatorController controller = new CalculatorController(null, recordService);
 
@@ -110,11 +109,13 @@ class CalculatorControllerTest {
         Principal principal = mock(Principal.class);
         when(principal.getName()).thenReturn("validUser");
         RecordService recordService = mock(RecordService.class);
-        List<RecordEntity> mockRecords = List.of(new RecordEntity(), new RecordEntity());
+        List<RecordResponse> mockRecords = List.of(
+                new RecordResponse(1L, "addition", "user", 100f, "8.0", LocalDateTime.now(), "active"),
+                new RecordResponse(2L, "addition", "user", 100f, "8.0", LocalDateTime.now(), "active"));
         when(recordService.getAllRecordsByUsername("validUser")).thenReturn(mockRecords);
         CalculatorController controller = new CalculatorController(null, recordService);
 
-        List<RecordEntity> records = controller.getRecordsByUsername(principal);
+        List<RecordResponse> records = controller.getRecordsByUsername(principal);
 
         assertEquals(2, records.size());
         assertEquals(mockRecords, records);

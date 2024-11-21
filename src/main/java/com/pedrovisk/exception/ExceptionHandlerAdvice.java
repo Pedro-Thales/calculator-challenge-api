@@ -22,6 +22,12 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
     }
 
+    @ExceptionHandler(RecordNotFoundException.class)
+    private ResponseEntity<ErrorMessage> recordNotFound(RecordNotFoundException exception) {
+        var errorMessage = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     private ResponseEntity<String> handleAllExceptions(RuntimeException exception) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

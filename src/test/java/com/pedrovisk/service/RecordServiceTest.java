@@ -67,8 +67,8 @@ class RecordServiceTest {
         RecordResponse result = recordService.saveOperation("user", request);
 
         assertNotNull(result);
-        assertEquals(userId, result.userId());
-        assertEquals(operation.getId(), result.operationId());
+        assertEquals(user.getUsername(), result.username());
+        assertEquals(operation.getType(), result.operationType());
         assertEquals(80.0f, result.userBalance());
         assertEquals("10.0", result.operationResponse());
     }
@@ -81,9 +81,7 @@ class RecordServiceTest {
 
         Mockito.when(userService.findById(userId)).thenThrow();
 
-        assertThrows(RuntimeException.class, () -> {
-            recordService.saveOperation("user", request);
-        });
+        assertThrows(RuntimeException.class, () -> recordService.saveOperation("user", request));
 
     }
 

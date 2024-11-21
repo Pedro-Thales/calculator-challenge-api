@@ -79,7 +79,7 @@ class CalculatorControllerTestIT {
         operation.setCost(20.0f);
         operation.setType("addition");
 
-        RecordResponse savedRecord = new RecordResponse(1L, operation.getId(), user.getId(), 80f,
+        RecordResponse savedRecord = new RecordResponse(1L, operation.getType(), user.getUsername(), 80f,
                 "10.0", LocalDateTime.now(), Status.ACTIVE.getValue());
 
         CalculatorRequest request = new CalculatorRequest(1L, 1, 10.0f, 2f);
