@@ -120,6 +120,12 @@ docker push <your-dockerhub-username>/<image-name>:<version>
 Use your cloud provider’s deployment tools (e.g., Kubernetes, AWS ECS, Azure App Service, etc.) to deploy the application using the Docker image.
 
 
+## Deploying All Applications
+
+In order to make it easier to deploy all applications, I provide a docker-compose file example that can be used as a reference.
+You can find it in the root directory of the project as `compose-full-application-example.yaml`
+
+
 ## Happy coding! 🎉
 
 

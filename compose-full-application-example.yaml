@@ -1,0 +1,32 @@
+services:
+  mysql:
+    image: 'mysql:9.1.0'
+    environment:
+      - 'MYSQL_DATABASE=calculator'
+      - 'MYSQL_PASSWORD=pass'
+      - 'MYSQL_ROOT_PASSWORD=pass'
+      - 'MYSQL_USER=myuser'
+    ports:
+      - '3306:3306'
+
+  api:
+    image: 'localhost:5000/calculator-challenge-api:1.0.2'
+    environment:
+      DB_URL: "jdbc:mysql://mysql:3306/calculator"
+      DB_USER: "root"
+      DB_PASSWORD: "pass"
+      TOKEN_SECRET: "secret"
+      TOKEN_EXPIRATION_TIME_IN_MINUTES: 60
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+
+  ui:
+    image: 'localhost:5000/calculator-challenge-ui:1.0.2'
+    environment:
+      REACT_APP_API_URL: "http://api:8080/"
+    ports:
+      - "80:80"
+    depends_on:
+      - api
