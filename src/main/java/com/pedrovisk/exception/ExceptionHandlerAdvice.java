@@ -11,21 +11,23 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    private ResponseEntity<ErrorMessage> userNotFound(UsernameNotFoundException exception) {
-        var errorMessage = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+    private ResponseEntity<String> userNotFound(UsernameNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    private ResponseEntity<ErrorMessage> userNotFound(UserNotFoundException exception) {
-        var errorMessage = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+    private ResponseEntity<String> userNotFound(UserNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(InvalidLoginException.class)
+    private ResponseEntity<String> handleInvalidLoginExceptions(InvalidLoginException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 
     @ExceptionHandler(RecordNotFoundException.class)
-    private ResponseEntity<ErrorMessage> recordNotFound(RecordNotFoundException exception) {
-        var errorMessage = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+    private ResponseEntity<String> recordNotFound(RecordNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)

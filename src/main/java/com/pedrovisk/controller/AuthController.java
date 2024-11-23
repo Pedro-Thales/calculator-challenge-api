@@ -1,6 +1,7 @@
 package com.pedrovisk.controller;
 
 
+import com.pedrovisk.exception.InvalidLoginException;
 import com.pedrovisk.infra.security.TokenService;
 import com.pedrovisk.model.dto.LoginRequest;
 import com.pedrovisk.model.dto.LoginResponse;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin(origins = {"http://localhost", "http://localhost:3000", "https://calculator-challenge.pedrovisk.com/"}, allowedHeaders = "*")
 public class AuthController {
 
     private final UserService userService;
@@ -23,7 +25,6 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         log.info("Login request received for username: {}", request.username());
         var user = userService.findByUsernameAndIsActive(request.username());
@@ -31,8 +32,7 @@ public class AuthController {
             String token = tokenService.generateToken(user.getUsername());
             return ResponseEntity.ok(new LoginResponse(user.getUsername(), token));
         }
-
-        return ResponseEntity.badRequest().build();
+        throw new InvalidLoginException("Invalid username or password.");
 
     }
 
