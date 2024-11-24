@@ -26,14 +26,14 @@ public class UserService {
     public UserEntity findByUsername(String userName) {
         log.info("Finding user by username {}", userName);
         return userRepository.findByUsername(userName).orElseThrow(() ->
-                new UsernameNotFoundException("User with username " + userName + " not found"));
+                new UsernameNotFoundException("User not found"));
     }
 
     public UserEntity findByUsernameAndIsActive(String userName) {
         log.info("Finding active user by username {}", userName);
         return userRepository.findByUsername(userName)
                 .filter(userEntity -> userEntity.getStatus() == Status.ACTIVE)
-                .orElseThrow(() -> new UsernameNotFoundException("User with username " + userName + " not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found or inactive"));
     }
 
 

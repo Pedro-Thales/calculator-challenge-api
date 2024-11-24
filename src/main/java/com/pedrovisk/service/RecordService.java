@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -66,7 +67,7 @@ public class RecordService {
         recordEntity.setAmount(request.getAmount());
         recordEntity.setUserBalance(currentBalance - cost);  // Update balance after deduction
         recordEntity.setOperationResponse(result);
-        recordEntity.setDate(LocalDateTime.now());
+        recordEntity.setDate(LocalDateTime.now(ZoneId.of("UTC")));
         recordEntity.setStatus(Status.ACTIVE);
         log.debug("Saving RecordEntity with data: {}", recordEntity);
         return recordRepository.save(recordEntity);
